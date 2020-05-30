@@ -25,10 +25,10 @@ io.on('connection', (socket) => {
     // io.emit('MESSAGE', msg);
   });
 
-  socket.on('waiting-talk', () => {
-    console.log('waiting user: ', socket.id);
+  socket.on('waiting-talk', (room_id) => {
+    console.log('waiting user: ', room_id);
     // waiting user: K5Jh9LoyanfVg6EPAAAC 的なhashが来るのでこいつをkeyにskywayはwaitingできたり...？
-    socket.broadcast.emit('request-calling-user', socket.id);
+    socket.broadcast.emit('request-calling-user', room_id);
   });
 });
 

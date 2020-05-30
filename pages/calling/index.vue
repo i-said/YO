@@ -47,7 +47,8 @@ export default {
   },
   mounted() {
     console.log("mounted path: /calling");
-
+    let room_id = this.$route.query.room_id;
+    if (!room_id) window.location.href = "/";
     // const Peer = window.Peer;
 
     (async function main() {
