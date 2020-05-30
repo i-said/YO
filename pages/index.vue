@@ -15,7 +15,8 @@
 <script>
 import TalkingButton from '~/components/TalkingButton'
 import io from 'socket.io-client'
-const host = 'localhost:3001';
+
+const host = (process.env.HOST_SOCKETIO || "localhost") + ':3001';
 
 
 export default {

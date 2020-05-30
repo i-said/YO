@@ -11,7 +11,7 @@
 
 <script>
 import io from 'socket.io-client';
-const host = 'kizuna-socketio.herokuapp.com:3001';
+const host = (process.env.HOST_SOCKETIO || "localhost") + ':3001';
 
 export default {
   data() {
