@@ -27,10 +27,10 @@ export default {
       if (!this.$parent.socket) {
         this.$parent.socket = io(host);
       }
-      this.$parent.socket.emit('waiting-talk')
 
-      // TODO: roomのほうにoverlayしてやるほうがよさそう
-      this.$parent.isLoading = true;
+      let room_id = "SOMEHOW"; // TODO: skywayから払い出されたやーつを使う
+      this.$parent.socket.emit('waiting-talk', room_id)
+      window.location.href = "/calling?room_id=" + room_id;
     }
 
   }

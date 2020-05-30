@@ -27,7 +27,9 @@ export default {
     TalkingButton
   },
   mounted() {
-    console.log("mounted path: /calling")
+    console.log("mounted path: /calling");
+      let room_id = this.$route.query.room_id;
+      if (!room_id) window.location.href = "/";
   }
 
 }
