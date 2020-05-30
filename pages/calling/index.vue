@@ -30,7 +30,7 @@
 import Peer from "skyway-js";
 import TalkingButton from "~/components/TalkingButton";
 import io from "socket.io-client";
-const host = "localhost:3001";
+const host = "kizuna-socketio.herokuapp.com:3001";
 
 export default {
   name: "index",
