@@ -39,7 +39,7 @@ export default {
     this.socket.on('request-calling-user', room_id => {
         console.log("通話したそうな人がきたよ");
         let isReady = confirm("通話したそうな人がきたよ。通話を開始しますか？");
-        if (isReady) return window.location.href = "/calling?room_id=" + room_id;
+        if (isReady) return window.location.href = "./calling?room_id=" + room_id;
         // this.waitingUsers.push( message || {} )
       }
     )

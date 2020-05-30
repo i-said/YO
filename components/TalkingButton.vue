@@ -30,7 +30,7 @@ export default {
 
       let room_id = "SOMEHOW"; // TODO: skywayから払い出されたやーつを使う
       this.$parent.socket.emit('waiting-talk', room_id)
-      window.location.href = "/calling?room_id=" + room_id;
+      window.location.href = "./calling?room_id=" + room_id;
     }
 
   }
