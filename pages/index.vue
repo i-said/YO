@@ -1,24 +1,49 @@
 <template>
   <section class="section">
-    <div class="columns is-mobile">
-      <card
-        title="YO!"
-        icon="alert-decagram"
-      >
-      Say, YO!
-      </card>
+
+    <div class="columns is-mobile is-centered">
+      <talking-button>
+      Alo!
+      </talking-button>
     </div>
+    <!--
+    <span>Todo: waiting中のloading  {{ isLoading }}</span>
+    -->
   </section>
 </template>
 
 <script>
-import Card from '~/components/Card'
+import TalkingButton from '~/components/TalkingButton'
+import io from 'socket.io-client'
+const host = 'localhost:3001';
+
 
 export default {
-  name: 'HomePage',
+  name: 'index',
+  data() {
+    return {
+      waitingUsers: [],
+      socket: '',
+      isLoading: false
+    }
+  },
 
   components: {
-    Card
+    TalkingButton
+  },
+  mounted() {
+    console.log("mounted path: /", this.socket)
+    this.socket = io(host);
+
+    // 通話したそうな人が来たらalertが飛ぶ
+    this.socket.on('request-calling-user', user => {
+        console.log("通話したそうな人がきたよ");
+        let isReady = confirm("通話したそうな人がきたよ。通話を開始しますか？");
+        if (isReady) return window.location.href = "/calling"
+        // this.waitingUsers.push( message || {} )
+      }
+    )
   }
+
 }
 </script>
