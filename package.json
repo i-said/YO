@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "start": "nuxt start && node server/app.js",
+    "start": "nuxt start",
     "deploy": "node node_modules/push-dir/bin/push-dir.js --dir=dist --branch=master --cleanup",
     "generate": "nuxt generate"
   },
