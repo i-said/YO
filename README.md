@@ -8,8 +8,13 @@
 # install dependencies
 $ npm install
 
+# socket.io server up
+$ cd server
+$ node app.js
+
 # serve with hot reload at localhost:3000
 $ npm run dev
+
 
 # build for production and launch server
 $ npm run build
