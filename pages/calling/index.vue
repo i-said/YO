@@ -30,7 +30,7 @@
 import Peer from "skyway-js";
 import TalkingButton from "~/components/TalkingButton";
 import io from "socket.io-client";
-const host = (process.env.HOST_SOCKETIO || "localhost") + ":3001";
+const host = (process.env.VUE_APP_HOST_SOCKETIO || "localhost") + ":3001";
 
 export default {
   name: "index",
