@@ -19,7 +19,7 @@
         <div class="card-content">
           <div class="content yo-button has-text-centered">
           </div>
-          There is a call.<br>
+          There is a call. <br>
           Do you want to talk?
         </div>
       </button>
