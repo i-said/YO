@@ -19,8 +19,8 @@
         <div class="card-content">
           <div class="content yo-button has-text-centered">
           </div>
-          通話したそうな人がいます。<br>
-          通話しますか？
+          There is a call.<br>
+          Do you want to talk?
         </div>
       </button>
 
