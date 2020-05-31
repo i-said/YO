@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <div class="columns is-mobile is-centered">
-      <talking-button>Alo!</talking-button>
+      <talking-button>moshi!<br>moshi!</talking-button>
     </div>
     <!--
     <span>Todo: waiting中のloading  {{ isLoading }}</span>

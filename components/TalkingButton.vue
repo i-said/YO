@@ -1,8 +1,18 @@
 <template>
-    <button class="card" @click="createAloRoom">
+    <button style="
+      border-radius: 50%;
+      width: 200px;
+      height: 200px;
+      background-color: #248;
+      color: #fff;
+      border-style: #ffffff;
+      font-size:30pt;
+      font-weight:bold;
+      vertical-align:middle;
+      "
+      @click="createAloRoom">
       <div class="card-content">
         <div class="content yo-button has-text-centered">
-
         </div>
         <slot />
       </div>
