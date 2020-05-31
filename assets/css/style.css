@@ -1,0 +1,78 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*----------------------
+	デフォルトスタイル
+-----------------------*/
+body,p,h1,h2,h3,h4,h5,h6,
+span,small,strong,
+div,ul,li,
+figure,img,
+header,footer,nav,section{
+    margin:0;
+    padding:0;
+	border:none;
+	outline:none;
+	font-size:1rem;
+}
+
+header,footer,nav,section{display:block;}
+
+html{
+	font:13px/1.3 "ヒラギノ角ゴ Pro W3";
+	-webkit-text-size-adjust:none;}
+
+li{list-style:none;}
+
+
+
+/*----------------------------------------
+ 全ページ共有ここから
+----------------------------------------*/
+
+body::before {
+  content: "";
+  background-color: ##FFA0C9;
+  background-size: cover;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  transform: translateZ(0);
+}
+
+.contents {
+  text-align: center;
+}
+
+.hukidasi01{
+  margin-top:30%;
+}
+.hukidasi02{
+  margin-top:50%;
+  margin-bottom: 20px;
+}
+.thank{
+  margin-top:50%;
+}
+
+.hiya_btn{
+  border: 0;
+  background: 0;
+}
+.hiya_btn:focus {
+  outline:0;
+}
+
+
+
+
+
+
+
+
+
+
