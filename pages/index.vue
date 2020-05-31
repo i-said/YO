@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section hiya-top">
     <div class="columns is-mobile is-centered">
       <img src="~/assets/img/hukidasi01.png" width="300px">
     </div>
@@ -45,7 +45,7 @@ export default {
   methods: {
     ...mapActions([
       'peer/add'
-    ])    
+    ])
   },
   mounted() {
     console.log("mounted path: /", this.socket);
