@@ -1,6 +1,6 @@
 <template>
 
-    <div class="modal is-active is-mobile is-centered">
+    <div class="modal is-active">
       <div class="modal-background"></div>
       <div class="modal-content">
         <!-- Any other Bulma elements you want -->
@@ -61,3 +61,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .modal-content {
+    text-align: center !important;
+  }
+</style>

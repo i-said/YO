@@ -5,10 +5,11 @@
     </div>
     <div class="columns is-mobile is-centered">
       <talking-button></talking-button>
+      <template v-if="waitingUsers.length">
+        <calling-proposal-dialog />
+      </template>
+
     </div>
-    <template v-if="waitingUsers.length">
-      <calling-proposal-dialog />
-    </template>
   </section>
 </template>
 
