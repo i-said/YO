@@ -47,11 +47,13 @@ body::before {
 .main-content {
   content: "";
   background-color: #FFA0C9;
+  background-image: url("../img/bg01.png");
   background-size: cover;
   display: block;
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   width: 100vw;
   height: 100vh;
   z-index: -1;

@@ -1,6 +1,8 @@
 <template>
-  <section class="section">
-    <img src="~/assets/img/hukidasi01.png" width="300px">
+  <section class="section is-centered">
+    <div class="columns is-mobile is-centered">
+      <img src="~/assets/img/hukidasi01.png" width="300px">
+    </div>
     <div class="columns is-mobile is-centered">
       <talking-button></talking-button>
     </div>
