@@ -1,5 +1,5 @@
 <template>
-  <section class="section is-centered">
+  <section class="section">
     <div class="columns is-mobile is-centered">
       <img src="~/assets/img/hukidasi01.png" width="300px">
     </div>
