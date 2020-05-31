@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="main-content columns bg_image_hiya">
+    <section class="main-content columns bg_image_hiyaing">
       <div class="container column is-10">
         <nuxt />
       </div>

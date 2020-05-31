@@ -19,6 +19,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 const host = "yo-socketio.herokuapp.com";
 
 export default {
+  layout: 'hangup',
   name: "hangup",
   data() {
     return {
