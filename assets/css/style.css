@@ -32,7 +32,21 @@ li{list-style:none;}
 
 body::before {
   content: "";
-  background-color: ##FFA0C9;
+  background-color: #FFA0C9;
+  background-size: cover;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  transform: translateZ(0);
+}
+/*add style for main*/
+.main-content {
+  content: "";
+  background-color: #FFA0C9;
   background-size: cover;
   display: block;
   position: fixed;
