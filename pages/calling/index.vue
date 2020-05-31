@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section>
     <template v-if="!isStartTalking" >
       <calling-wait-dialog />
     </template>
@@ -172,7 +172,7 @@ export default {
   .hangup-box {
     width: 80%;
     min-height: 60%;
-    margin-top: 50px;
+    margin-top: 100px;
     padding: 30px;
   }
   .hangup-button {

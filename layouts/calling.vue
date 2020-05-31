@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="main-content  bg_image_hiyaing">
+    <section class="main-content bg_image_hiyaing">
       <div class="container">
         <nuxt />
       </div>
