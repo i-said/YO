@@ -1,7 +1,7 @@
 <template>
   <div>
-    <section class="main-content columns bg_image_hiyaing">
-      <div class="container column is-10">
+    <section class="main-content  bg_image_hiyaing">
+      <div class="container">
         <nuxt />
       </div>
     </section>
