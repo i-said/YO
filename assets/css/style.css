@@ -83,6 +83,11 @@ body::before {
   margin-top:50%;
   margin-bottom: 20px;
 }
+
+.hiya-top{
+  margin-top:50%;
+}
+
 .thank{
   margin-top:50%;
 }
