@@ -44,17 +44,6 @@ export default {
       isLoading: false
     };
   },
-
-  components: {
-    TalkingButton
-  },
-  // computed:{
-
-  //   ...mapState({
-  //     getPeerObject: state => state.skywayPeer
-  //   })
-  // }
-  // ,
   mounted() {
     console.log("mounted path: /calling", this.skywayPeerOjbect);
     let room_id = this.$route.query.room_id;
