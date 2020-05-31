@@ -1,5 +1,8 @@
 <template>
   <section class="section">
+    <template v-if="10 === 100" >
+      <calling-wait-dialog />
+    </template>
     <div class="columns is-mobile is-centered">
       <div class="container">
         <div class="remote-stream">
@@ -18,6 +21,8 @@
 
 <script>
 import Peer from "skyway-js";
+import CallingWaitDialog from '~/components/CallingWaitDialog'
+
 const host = "yo-socketio.herokuapp.com"
 import { mapState, mapMutations } from 'vuex'
 
@@ -32,6 +37,9 @@ export default {
       socket: "",
       isLoading: false
     };
+  },
+  components:{
+    CallingWaitDialog
   },
   methods: {
     gotoThankYouPage: ()=> {
