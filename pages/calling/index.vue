@@ -28,10 +28,9 @@
 
 <script>
 import Peer from "skyway-js";
-import TalkingButton from "~/components/TalkingButton";
 import io from "socket.io-client";
 const host = "yo-socketio.herokuapp.com"
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 // const host = "localhost:3001"; //.env.local
 
@@ -45,19 +44,19 @@ export default {
     };
   },
 
-  components: {
-    TalkingButton
-  },
+  components: {},
   computed: {
     ...mapState({
-      getPeerObject: state => state.skywayPeer
+      skywayPeerOjbect: state => state.peer.skywayPeer
     })
   },
   mounted() {
-    console.log("mounted path: /calling", this.getPeerObject);
+    console.log("mounted path: /calling", this.skywayPeerOjbect);
     let room_id = this.$route.query.room_id;
     if (!room_id) window.location.href = "/";
-    // const Peer = window.Peer;
+    // TODO: broken...
+    const peer = this.$store.state.peer.skywayPeer; 
+    // Object.assign(this.skywayPeerOjbect);
 
     (async function main() {
       const localVideo = document.getElementById("js-local-stream");
@@ -68,8 +67,6 @@ export default {
       const remoteId = document.getElementById("js-remote-id");
       const meta = document.getElementById("js-meta");
       const sdkSrc = document.querySelector("script[src*=skyway]");
-
-      const peer = this.getPeerObject
 
       // meta.innerText = `
       //   UA: ${navigator.userAgent}
