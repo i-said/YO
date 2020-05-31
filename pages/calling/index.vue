@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <template v-if="isStartTalking" >
+    <template v-if="!isStartTalking" >
       <calling-wait-dialog />
     </template>
     <div class="columns is-mobile is-centered">
