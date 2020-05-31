@@ -14,6 +14,9 @@
         <a href="" id="js-close-trigger">
           <img src="~/assets/img/btn_hangup.png" width="300px">
         </a>
+        <div class="controls">
+          <b-switch v-model="mute" @input="toggleMute">mute</b-switch>
+        </div>
       </div>
     </div>
     <div class="container is-hidden">
@@ -23,7 +26,6 @@
       <div class="local-stream">
         <video id="js-local-stream"></video>
       </div>
-
     </div>
 
   </section>
@@ -43,11 +45,23 @@ export default {
   name: "index",
   data() {
     return {
+      localVideo: null,
+      remoteVideo: null,
+      mute: false,
       waitingUsers: [],
       socket: "",
       isLoading: false,
       isStartTalking: false
     };
+  },
+  methods: {
+    toggleMute:function() {
+      console.log("mute:" + this.mute)
+      this.localVideo.srcObject.getAudioTracks()[0].enabled = !this.mute
+    },
+    leave: function() {
+      console.log("leave")
+    }
   },
   components:{
     CallingWaitDialog
@@ -73,8 +87,8 @@ export default {
 
     const self = this;
     (async function main() {
-      const localVideo = document.getElementById('js-local-stream');
-      const remoteVideo = document.getElementById('js-remote-stream');
+      const localVideo = self.localVideo = document.getElementById('js-local-stream');
+      const remoteVideo = self.remoteVideo = document.getElementById('js-remote-stream');
       const closeTrigger = document.getElementById('js-close-trigger');
 
       const localStream = await navigator.mediaDevices
@@ -108,7 +122,7 @@ export default {
           // Render remote stream for caller
           remoteVideo.srcObject = stream;
           remoteVideo.playsInline = true;
-          remoteVideo.volume = 0.75;
+          remoteVideo.volume = 1.0;
           remoteVideo.controls = false;
           await remoteVideo.play().catch(console.error);
         });
@@ -134,7 +148,7 @@ export default {
           // Render remote stream for callee
           remoteVideo.srcObject = stream;
           remoteVideo.playsInline = true;
-          remoteVideo.volume = 0.75;
+          remoteVideo.volume = 1.0;
           remoteVideo.controls = false;
           await remoteVideo.play().catch(console.error);
         });
@@ -163,6 +177,12 @@ export default {
 
     })();
 
+  },
+  beforeDestroy() {
+    console.log("beforeDestroy")
+    if(this.localVideo.srcObject !== null) {
+      this.localVideo.srcObject.getTracks().forEach(track => track.stop());
+    }
   }
 };
 </script>
