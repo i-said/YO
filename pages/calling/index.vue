@@ -24,6 +24,7 @@ import { mapState, mapMutations } from 'vuex'
 // const host = "localhost:3001"; //.env.local
 
 export default {
+  layout: 'calling',
   name: "index",
   data() {
     return {
@@ -49,7 +50,7 @@ export default {
     const closeTrigger = document.getElementById("js-close-trigger");
     const remoteVideo = document.getElementById("js-remote-stream");
     const sdkSrc = document.querySelector("script[src*=skyway]");
-    
+
     (async () => {
       const peer = window.peer;
       const localStream = await navigator.mediaDevices

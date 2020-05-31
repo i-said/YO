@@ -1,7 +1,10 @@
 <template>
   <section class="section">
     <div class="columns is-mobile is-centered">
-      <talking-button>moshi!<br>moshi!</talking-button>
+      <img src="~/assets/img/hukidasi01.png" width="300px">
+    </div>
+    <div class="columns is-mobile is-centered">
+      <talking-button></talking-button>
     </div>
     <template v-if="waitingUsers.length">
       <calling-proposal-dialog />
