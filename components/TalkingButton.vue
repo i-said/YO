@@ -32,7 +32,7 @@ export default {
       }
       console.log("myUserID:" + this.$parent.myUserID)
 
-      this.$store.commit('peer/add', this.$parent.peer)
+      // this.$store.commit('peer/add', this.$parent.peer)
       this.$parent.socket.emit('waiting-talk', this.$parent.myUserID)
       this.$router.push({ path: '/calling', query: {'room_id': this.$parent.myUserID}})
     }
