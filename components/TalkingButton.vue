@@ -30,12 +30,11 @@ export default {
       if (!this.$parent.socket) {
         this.$parent.socket = io(host);
       }
+      console.log("myUserID:" + this.$parent.myUserID)
 
-      let room_id = "SOMEHOW"; // TODO: skywayから払い出されたやーつを使う
-      let peerObj = {'peer': 'peerobject'}
-      this.$store.commit('peer/add', peerObj)
-      this.$parent.socket.emit('waiting-talk', room_id)
-      this.$router.push({ path: '/calling', query: {'room_id': room_id}})
+      this.$store.commit('peer/add', this.$parent.peer)
+      this.$parent.socket.emit('waiting-talk', this.$parent.myUserID)
+      this.$router.push({ path: '/calling', query: {'room_id': this.$parent.myUserID}})
     }
   }
 }

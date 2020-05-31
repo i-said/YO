@@ -50,11 +50,11 @@ export default {
   },
   computed: {
     ...mapState({
-      skywayPeerOjbect: state => state.peer.skywayPeer
+      getPeerObject: state => state.skywayPeer
     })
   },
   mounted() {
-    console.log("mounted path: /calling", this.skywayPeerOjbect);
+    console.log("mounted path: /calling", this.getPeerObject);
     let room_id = this.$route.query.room_id;
     if (!room_id) window.location.href = "/";
     // const Peer = window.Peer;
@@ -68,6 +68,8 @@ export default {
       const remoteId = document.getElementById("js-remote-id");
       const meta = document.getElementById("js-meta");
       const sdkSrc = document.querySelector("script[src*=skyway]");
+
+      const peer = this.getPeerObject
 
       // meta.innerText = `
       //   UA: ${navigator.userAgent}
@@ -87,10 +89,13 @@ export default {
       localVideo.playsInline = true;
       await localVideo.play().catch(console.error);
 
-      const peer = (window.peer = new Peer({
-        key: 'd8e43ecb-578b-414e-a161-2f00615b447e',
-        debug: 3
-      }));
+      // const peer = (window.peer = new Peer({
+      //   key: 'd8e43ecb-578b-414e-a161-2f00615b447e',
+      //   debug: 3
+      // }));
+
+      // //Openすると、IDが払い出される。このIDで相手とのやり取りが開始される。
+      // peer.once("open", id => (localId.textContent = id));
 
       // Register caller handler
       callTrigger.addEventListener("click", () => {
@@ -120,7 +125,7 @@ export default {
       });
 
       //Openすると、IDが払い出される。このIDで相手とのやり取りが開始される。
-      peer.once("open", id => (localId.textContent = id));
+      // peer.once("open", id => (localId.textContent = id));
 
       peer.on("call", mediaConnection => {
         mediaConnection.answer(localStream);
