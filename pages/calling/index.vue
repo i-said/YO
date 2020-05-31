@@ -28,9 +28,12 @@
 
 <script>
 import Peer from "skyway-js";
-import TalkingButton from "~/components/TalkingButton";
 import io from "socket.io-client";
 const host = process.env.HOST_SOCKET_IO; //.env.local
+// const host = "yo-socketio.herokuapp.com"
+import { mapState, mapMutations } from 'vuex'
+
+// const host = "localhost:3001"; //.env.local
 
 export default {
   name: "index",
@@ -45,21 +48,30 @@ export default {
   components: {
     TalkingButton
   },
+  // computed:{
+
+  //   ...mapState({
+  //     getPeerObject: state => state.skywayPeer
+  //   })
+  // }
+  // ,
   mounted() {
-    console.log("mounted path: /calling");
+    console.log("mounted path: /calling", this.skywayPeerOjbect);
     let room_id = this.$route.query.room_id;
     if (!room_id) window.location.href = "/";
-    // const Peer = window.Peer;
 
     (async function main() {
       const localVideo = document.getElementById("js-local-stream");
       const localId = document.getElementById("js-local-id");
+      localId.innerHTML = room_id;
       const callTrigger = document.getElementById("js-call-trigger");
       const closeTrigger = document.getElementById("js-close-trigger");
       const remoteVideo = document.getElementById("js-remote-stream");
       const remoteId = document.getElementById("js-remote-id");
       const meta = document.getElementById("js-meta");
       const sdkSrc = document.querySelector("script[src*=skyway]");
+
+      const peer = window.peer;
 
       // meta.innerText = `
       //   UA: ${navigator.userAgent}
@@ -79,10 +91,13 @@ export default {
       localVideo.playsInline = true;
       await localVideo.play().catch(console.error);
 
-      const peer = (window.peer = new Peer({
-        key: 'd8e43ecb-578b-414e-a161-2f00615b447e',
-        debug: 3
-      }));
+      // const peer = (window.peer = new Peer({
+      //   key: 'd8e43ecb-578b-414e-a161-2f00615b447e',
+      //   debug: 3
+      // }));
+
+      // //Openすると、IDが払い出される。このIDで相手とのやり取りが開始される。
+      // peer.once("open", id => (localId.textContent = id));
 
       // Register caller handler
       callTrigger.addEventListener("click", () => {
@@ -92,6 +107,7 @@ export default {
           return;
         }
 
+        console.log(peer);
         const mediaConnection = peer.call(remoteId.value, localStream);
 
         mediaConnection.on("stream", async stream => {
