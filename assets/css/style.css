@@ -47,7 +47,6 @@ body::before {
 .main-content {
   content: "";
   background-color: #FFA0C9;
-  background-image: url("../img/bg01.png");
   background-size: cover;
   display: block;
   position: fixed;
@@ -58,6 +57,18 @@ body::before {
   height: 100vh;
   z-index: -1;
   transform: translateZ(0);
+}
+
+.bg_image_hiya {
+  background-image: url("../img/bg01.png");
+}
+
+.bg_image_hiyaing {
+  background-image: url("../img/bg02.png");
+}
+
+.bg_image_hangup {
+  background-image: url("../img/bg03.png");
 }
 
 .contents {
