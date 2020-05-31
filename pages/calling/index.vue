@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <template v-if="10 === 100" >
+    <template v-if="!isStartTalking" >
       <calling-wait-dialog />
     </template>
     <div class="columns is-mobile is-centered">
@@ -35,7 +35,8 @@ export default {
     return {
       waitingUsers: [],
       socket: "",
-      isLoading: false
+      isLoading: false,
+      isStartTalking: false
     };
   },
   components:{
@@ -60,7 +61,7 @@ export default {
       return
     }
 
-
+    const self = this;
     (async function main() {
       const localVideo = document.getElementById('js-local-stream');
       const remoteVideo = document.getElementById('js-remote-stream');
@@ -118,8 +119,9 @@ export default {
 
 
       peer.on('call', mediaConnection => {
+        // searching modal fade
+        self.isStartTalking = true;
         mediaConnection.answer(localStream);
-
         mediaConnection.on('stream', async stream => {
           // Render remote stream for callee
           remoteVideo.srcObject = stream;

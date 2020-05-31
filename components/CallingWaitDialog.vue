@@ -9,7 +9,6 @@
           <p class="hito02">
             <img src="~/assets/img/hito02.png" width="300px">
           </p>
-
         </div>      
       </div>
     </div>
@@ -20,6 +19,9 @@ export default {}
 </script>
 
 <style>
+.contents {
+  height: auto;
+}
 .modal-background {
   background-color: #FFA0C9;
   background-size: cover;
