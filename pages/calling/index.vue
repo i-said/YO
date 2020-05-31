@@ -1,21 +1,31 @@
 <template>
-  <section class="section">
+  <section>
     <template v-if="!isStartTalking" >
       <calling-wait-dialog />
     </template>
     <div class="columns is-mobile is-centered">
-      <div class="container">
-        <div class="remote-stream">
-          <video id="js-remote-stream"></video>
-        </div>
-        <div class="local-stream">
-          <video id="js-local-stream"></video>
-        </div>
-        <div>
-          <button id="js-close-trigger">Close</button>
-        </div>
+      <div class="box hangup-box is-centered has-text-centered">
+        <p class="hito02">
+          <img src="~/assets/img/txt_talking.png" width="300px">
+        </p>
+        <p class="hito03">
+          <img src="~/assets/img/hito03.png" width="300px">
+        </p>
+        <a href="" id="js-close-trigger">
+          <img src="~/assets/img/btn_hangup.png" width="300px">
+        </a>
       </div>
     </div>
+    <div class="container is-hidden">
+      <div class="remote-stream">
+        <video id="js-remote-stream"></video>
+      </div>
+      <div class="local-stream">
+        <video id="js-local-stream"></video>
+      </div>
+
+    </div>
+
   </section>
 </template>
 
@@ -116,8 +126,6 @@ export default {
         });
       };
 
-
-
       peer.on('call', mediaConnection => {
         // searching modal fade
         self.isStartTalking = true;
@@ -158,3 +166,18 @@ export default {
   }
 };
 </script>
+
+
+<style scoped>
+  .hangup-box {
+    width: 80%;
+    min-height: 60%;
+    margin-top: 100px;
+    padding: 30px;
+  }
+  .hangup-button {
+    background-color: #FFA0C9;
+    color: #ffffff;
+    font-size: 24px !important;
+  }
+</style>
