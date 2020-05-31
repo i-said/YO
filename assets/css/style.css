@@ -52,7 +52,7 @@ body::before {
   position: fixed;
   top: 0;
   left: 0;
-  idth: 100vw;
+  width: 100vw;
   height: 100vh;
   z-index: -1;
   transform: translateZ(0);
