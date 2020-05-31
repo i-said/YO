@@ -33,30 +33,35 @@ export default {
       isLoading: false
     };
   },
-  methods: {
-    gotoThankYouPage: ()=> {
-      this.$router.push({ path: '/hungup' })
-    },
-  },
   mounted() {
     console.log("mounted path: /calling");
     const room_id = this.$route.query.room_id;
     const isOwner = this.$route.query.isOwner;
     if (!room_id) window.location.href = "/";
 
+    const gotoThankYouPage = ()=> {
+      console.log("gotoThankYouPage")
+      window.location.href = "/hangup"
+      return
+    }
+
     console.log("room_id:"+ room_id + " isOwner:" + isOwner)
 
-    const localVideo = document.getElementById("js-local-stream");
-    const closeTrigger = document.getElementById("js-close-trigger");
-    const remoteVideo = document.getElementById("js-remote-stream");
-    const sdkSrc = document.querySelector("script[src*=skyway]");
+    if(window.peer === undefined) {
+      gotoThankYouPage()
+      return
+    }
 
-    (async () => {
-      const peer = window.peer;
+
+    (async function main() {
+      const localVideo = document.getElementById('js-local-stream');
+      const remoteVideo = document.getElementById('js-remote-stream');
+      const closeTrigger = document.getElementById('js-close-trigger');
+
       const localStream = await navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true
+          video: true,
         })
         .catch(console.error);
 
@@ -66,62 +71,72 @@ export default {
       localVideo.playsInline = true;
       await localVideo.play().catch(console.error);
 
-      peer.on("call", mediaConnection => {
-      mediaConnection.answer(localStream);
+      const peer = window.peer
 
-      mediaConnection.on("stream", async stream => {
-        // Render remote stream for callee
-        remoteVideo.srcObject = stream;
-        remoteVideo.playsInline = true;
-        await remoteVideo.play().catch(console.error);
-      });
-
-      mediaConnection.once("close", () => {
-        remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-        remoteVideo.srcObject = null;
-      });
-
-      closeTrigger.addEventListener("click", () =>
-        mediaConnection.close(true)
-        );
-      });
-
+      // Register caller handler
       const callTrigger = (remoteId) => {
+        // Note that you need to ensure the peer has connected to signaling server
+        // before using methods of peer instance.
         if (!peer.open) {
+          gotoThankYouPage()
           return;
         }
         const mediaConnection = peer.call(remoteId, localStream);
 
-        mediaConnection.on("stream", async stream => {
+        mediaConnection.on('stream', async stream => {
           // Render remote stream for caller
           remoteVideo.srcObject = stream;
           remoteVideo.playsInline = true;
           await remoteVideo.play().catch(console.error);
         });
 
-        //接続が切られた場合
-        mediaConnection.once("close", () => {
+        mediaConnection.once('close', () => {
+          console.log("[callTrigger]mediaConnection.close")
           remoteVideo.srcObject.getTracks().forEach(track => track.stop());
           remoteVideo.srcObject = null;
-          //TODO: 接続が切られたが切られた場合
-          // gotoThankYouPage()
+          gotoThankYouPage()
         });
 
-        //接続を切る場合
-        closeTrigger.addEventListener("click", () =>
+        closeTrigger.addEventListener('click', () => {
+          console.log("[callTrigger]closeTrigger.click")
           mediaConnection.close(true)
-          //TODO: 接続が切られたが切られた場合
-          // gotoThankYouPage()
-        );
-      }
+        });
+      };
+
+
+
+      peer.on('call', mediaConnection => {
+        mediaConnection.answer(localStream);
+
+        mediaConnection.on('stream', async stream => {
+          // Render remote stream for callee
+          remoteVideo.srcObject = stream;
+          remoteVideo.playsInline = true;
+          await remoteVideo.play().catch(console.error);
+        });
+
+        mediaConnection.once('close', () => {
+          console.log("[peer.call]mediaConnection.close")
+          remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+          remoteVideo.srcObject = null;
+          gotoThankYouPage()
+        });
+
+        closeTrigger.addEventListener('click', () => {
+          console.log("[peer.call]closeTrigger.click")
+          mediaConnection.close(true)
+          
+        });
+      });
+
 
 
       //Errorになったらもとのページに戻す？
-      peer.on("error", console.error);
+      peer.on('error', console.error);
 
-      if(!isOwner) {
-        callTrigger(room_id)
-      }
+      //自分のIDじゃないのでCallする
+      if(!isOwner) callTrigger(room_id)
+
     })();
 
   }
