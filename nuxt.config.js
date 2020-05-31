@@ -30,7 +30,7 @@ export default {
   ** Global CSS
   */
   css: [
-    '~/assets/css/style.css'
+    '~assets/css/style.css'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -41,6 +41,7 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    ['@nuxtjs/dotenv',{ filename: process.env.NODE_ENV !== 'production' ? ".env.development" : ".env.production" }]
   ],
   /*
    * Nuxt.js router for gh-pages deploy
@@ -57,7 +58,6 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv',
   ],
   /*
   ** Axios module configuration

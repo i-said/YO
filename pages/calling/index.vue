@@ -1,76 +1,86 @@
 <template>
-  <section class="section">
+  <section>
+    <template v-if="!isStartTalking" >
+      <calling-wait-dialog />
+    </template>
     <div class="columns is-mobile is-centered">
-      <div class="container">
-        <h1 class="heading">P2P Media example</h1>
-        <p class="note">Enter remote peer ID to call.</p>
-        <div class="p2p-media">
-          <div class="remote-stream">
-            <video id="js-remote-stream" controls></video>
-          </div>
-          <div class="local-stream">
-            <video id="js-local-stream" controls></video>
-            <p>
-              Your ID:
-              <span id="js-local-id"></span>
-            </p>
-            <input type="text" placeholder="Remote Peer ID" id="js-remote-id" />
-            <!-- 自動的に接続するならCallボタンは不要 -->
-            <button id="js-call-trigger">Call</button>
-            <button id="js-close-trigger">Close</button>
-          </div>
-        </div>
-        <p class="meta" id="js-meta"></p>
+      <div class="box hangup-box is-centered has-text-centered">
+        <p class="hito02">
+          <img src="~/assets/img/txt_talking.png" width="300px">
+        </p>
+        <p class="hito03">
+          <img src="~/assets/img/hito03.png" width="300px">
+        </p>
+        <a href="" id="js-close-trigger">
+          <img src="~/assets/img/btn_hangup.png" width="300px">
+        </a>
       </div>
     </div>
+    <div class="container is-hidden">
+      <div class="remote-stream">
+        <video id="js-remote-stream"></video>
+      </div>
+      <div class="local-stream">
+        <video id="js-local-stream"></video>
+      </div>
+
+    </div>
+
   </section>
 </template>
 
 <script>
 import Peer from "skyway-js";
 import io from "socket.io-client";
-const host = process.env.HOST_SOCKET_IO; //.env.local
-// const host = "yo-socketio.herokuapp.com"
+import CallingWaitDialog from '~/components/CallingWaitDialog'
+
 import { mapState, mapMutations } from 'vuex'
 
-// const host = "localhost:3001"; //.env.local
+const host = process.env.HOST_SOCKET_IO;
 
 export default {
+  layout: 'calling',
   name: "index",
   data() {
     return {
       waitingUsers: [],
       socket: "",
-      isLoading: false
+      isLoading: false,
+      isStartTalking: false
     };
   },
+  components:{
+    CallingWaitDialog
+  },
   mounted() {
-    console.log("mounted path: /calling", this.skywayPeerOjbect);
-    let room_id = this.$route.query.room_id;
+    console.log("mounted path: /calling");
+    const room_id = this.$route.query.room_id;
+    const isOwner = this.$route.query.isOwner;
     if (!room_id) window.location.href = "/";
 
+    const gotoThankYouPage = ()=> {
+      console.log("gotoThankYouPage")
+      window.location.href = "/hangup"
+      return
+    }
+
+    console.log("room_id:"+ room_id + " isOwner:" + isOwner)
+
+    if(window.peer === undefined) {
+      gotoThankYouPage()
+      return
+    }
+
+    const self = this;
     (async function main() {
-      const localVideo = document.getElementById("js-local-stream");
-      const localId = document.getElementById("js-local-id");
-      localId.innerHTML = room_id;
-      const callTrigger = document.getElementById("js-call-trigger");
-      const closeTrigger = document.getElementById("js-close-trigger");
-      const remoteVideo = document.getElementById("js-remote-stream");
-      const remoteId = document.getElementById("js-remote-id");
-      const meta = document.getElementById("js-meta");
-      const sdkSrc = document.querySelector("script[src*=skyway]");
-
-      const peer = window.peer;
-
-      // meta.innerText = `
-      //   UA: ${navigator.userAgent}
-      //   SDK: ${sdkSrc ? sdkSrc.src : 'unknown'}
-      // `.trim();
+      const localVideo = document.getElementById('js-local-stream');
+      const remoteVideo = document.getElementById('js-remote-stream');
+      const closeTrigger = document.getElementById('js-close-trigger');
 
       const localStream = await navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true
+          video: false,
         })
         .catch(console.error);
 
@@ -78,70 +88,96 @@ export default {
       localVideo.muted = true;
       localVideo.srcObject = localStream;
       localVideo.playsInline = true;
+      localVideo.visible = false;
+      localVideo.controls = false;
       await localVideo.play().catch(console.error);
 
-      // const peer = (window.peer = new Peer({
-      //   key: 'd8e43ecb-578b-414e-a161-2f00615b447e',
-      //   debug: 3
-      // }));
-
-      // //Openすると、IDが払い出される。このIDで相手とのやり取りが開始される。
-      // peer.once("open", id => (localId.textContent = id));
+      const peer = window.peer
 
       // Register caller handler
-      callTrigger.addEventListener("click", () => {
+      const callTrigger = (remoteId) => {
         // Note that you need to ensure the peer has connected to signaling server
         // before using methods of peer instance.
         if (!peer.open) {
+          gotoThankYouPage()
           return;
         }
+        const mediaConnection = peer.call(remoteId, localStream);
 
-        console.log(peer);
-        const mediaConnection = peer.call(remoteId.value, localStream);
-
-        mediaConnection.on("stream", async stream => {
+        mediaConnection.on('stream', async stream => {
           // Render remote stream for caller
           remoteVideo.srcObject = stream;
           remoteVideo.playsInline = true;
+          remoteVideo.volume = 0.75;
+          remoteVideo.controls = false;
           await remoteVideo.play().catch(console.error);
         });
 
-        mediaConnection.once("close", () => {
+        mediaConnection.once('close', () => {
+          console.log("[callTrigger]mediaConnection.close")
           remoteVideo.srcObject.getTracks().forEach(track => track.stop());
           remoteVideo.srcObject = null;
+          gotoThankYouPage()
         });
 
-        closeTrigger.addEventListener("click", () =>
+        closeTrigger.addEventListener('click', () => {
+          console.log("[callTrigger]closeTrigger.click")
           mediaConnection.close(true)
-        );
-      });
+        });
+      };
 
-      //Openすると、IDが払い出される。このIDで相手とのやり取りが開始される。
-      peer.once("open", id => (localId.textContent = id));
-
-      peer.on("call", mediaConnection => {
+      peer.on('call', mediaConnection => {
+        // searching modal fade
+        self.isStartTalking = true;
         mediaConnection.answer(localStream);
-
-        mediaConnection.on("stream", async stream => {
+        mediaConnection.on('stream', async stream => {
           // Render remote stream for callee
           remoteVideo.srcObject = stream;
           remoteVideo.playsInline = true;
+          remoteVideo.volume = 0.75;
+          remoteVideo.controls = false;
           await remoteVideo.play().catch(console.error);
         });
 
-        mediaConnection.once("close", () => {
+        mediaConnection.once('close', () => {
+          console.log("[peer.call]mediaConnection.close")
           remoteVideo.srcObject.getTracks().forEach(track => track.stop());
           remoteVideo.srcObject = null;
+          gotoThankYouPage()
         });
 
-        closeTrigger.addEventListener("click", () =>
+        closeTrigger.addEventListener('click', () => {
+          console.log("[peer.call]closeTrigger.click")
           mediaConnection.close(true)
-        );
+
+        });
       });
 
+
+
       //Errorになったらもとのページに戻す？
-      peer.on("error", console.error);
+      peer.on('error', console.error);
+
+      //自分のIDじゃないのでCallする
+      if(!isOwner) callTrigger(room_id)
+
     })();
+
   }
 };
 </script>
+
+
+<style scoped>
+  .hangup-box {
+    width: 80%;
+    min-height: 60%;
+    margin-top: 100px;
+    padding: 30px;
+  }
+  .hangup-button {
+    background-color: #FFA0C9;
+    color: #ffffff;
+    font-size: 24px !important;
+  }
+</style>
