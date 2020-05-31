@@ -18,7 +18,7 @@ export default {
     ]),
     createAloRoom() {
       // TODO なにかルームが作られる
-      alert("Aloしてくれるユーザーを待ちます");
+      alert("Looking for someone to talk to...");
       console.log("host:" + host)
       if (!this.$parent.socket) {
         this.$parent.socket = io(host);
