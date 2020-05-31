@@ -73,5 +73,8 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+   env: {
+    HOST_SOCKET_IO: process.env.HOST_SOCKET_IO
   }
 }

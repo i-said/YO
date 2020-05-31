@@ -11,8 +11,7 @@
 
 <script>
 import io from 'socket.io-client';
-const host = "yo-socketio.herokuapp.com"
-// const host = "localhost:3001"; //.env.local
+const host = process.env.HOST_SOCKET_IO; //.env.local
 
 export default {
   data() {
