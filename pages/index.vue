@@ -1,11 +1,9 @@
 <template>
   <section class="section">
+    <img src="~/assets/img/hukidasi01.png" width="300px">
     <div class="columns is-mobile is-centered">
-      <talking-button>moshi!<br>moshi!</talking-button>
+      <talking-button></talking-button>
     </div>
-    <!--
-    <span>Todo: waiting中のloading  {{ isLoading }}</span>
-    -->
   </section>
 </template>
 
