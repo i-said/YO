@@ -5,9 +5,9 @@
   "author": "ikasumi_wt",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
+    "dev": "cross-env NODE_ENV=development nuxt",
+    "build": "cross-env NODE_ENV=production nuxt build",
+    "start": "cross-env NODE_ENV=production nuxt start",
     "deploy": "node node_modules/push-dir/bin/push-dir.js --dir=dist --branch=master --cleanup",
     "generate": "nuxt generate"
   },
@@ -15,6 +15,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/pwa": "^3.0.0-0",
+    "cross-env": "^7.0.2",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2",
     "skyway-js": "^3.0.0",

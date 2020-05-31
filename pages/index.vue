@@ -16,6 +16,7 @@ import io from 'socket.io-client'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 const host = process.env.HOST_SOCKET_IO; //.env.local
+console.log(host);
 // const host = "yo-socketio.herokuapp.com";
 // const host = "localhost:3001"; //.env.local
 
