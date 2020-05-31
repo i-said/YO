@@ -56,6 +56,7 @@ export default {
       console.log("通話したそうな人がきたよ");
       let isReady = confirm("通話したそうな人がきたよ。通話を開始しますか？");
       if (isReady)
+        this.socket.close();
         this.$router.push({ path: '/calling', query: {'room_id': room_id , 'isOwner': false}})
     });
   }

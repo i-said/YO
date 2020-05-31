@@ -44,6 +44,9 @@ export default {
 
       // this.$store.commit('peer/add', this.$parent.peer)
       this.$parent.socket.emit('waiting-talk', this.$parent.myUserID)
+      // close main socket
+      this.$parent.socket.close();
+
       this.$router.push({ path: '/calling', query: {'room_id': this.$parent.myUserID , 'isOwner': true}})
     }
   }

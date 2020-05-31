@@ -8,9 +8,9 @@
         <div class="local-stream">
           <video id="js-local-stream" controls></video>
         </div>
-        <dev>
+        <div>
           <button id="js-close-trigger">Close</button>
-        </dev>
+        </div>
       </div>
     </div>
   </section>
@@ -18,7 +18,6 @@
 
 <script>
 import Peer from "skyway-js";
-import io from "socket.io-client";
 const host = "yo-socketio.herokuapp.com"
 import { mapState, mapMutations } from 'vuex'
 
