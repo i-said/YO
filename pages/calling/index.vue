@@ -3,10 +3,10 @@
     <div class="columns is-mobile is-centered">
       <div class="container">
         <div class="remote-stream">
-          <video id="js-remote-stream" controls></video>
+          <video id="js-remote-stream"></video>
         </div>
         <div class="local-stream">
-          <video id="js-local-stream" controls></video>
+          <video id="js-local-stream"></video>
         </div>
         <div>
           <button id="js-close-trigger">Close</button>
@@ -61,7 +61,7 @@ export default {
       const localStream = await navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true,
+          video: false,
         })
         .catch(console.error);
 
@@ -69,6 +69,8 @@ export default {
       localVideo.muted = true;
       localVideo.srcObject = localStream;
       localVideo.playsInline = true;
+      localVideo.visible = false;
+      localVideo.controls = false;
       await localVideo.play().catch(console.error);
 
       const peer = window.peer
@@ -87,6 +89,8 @@ export default {
           // Render remote stream for caller
           remoteVideo.srcObject = stream;
           remoteVideo.playsInline = true;
+          remoteVideo.volume = 0.75;
+          remoteVideo.controls = false;
           await remoteVideo.play().catch(console.error);
         });
 
@@ -112,6 +116,8 @@ export default {
           // Render remote stream for callee
           remoteVideo.srcObject = stream;
           remoteVideo.playsInline = true;
+          remoteVideo.volume = 0.75;
+          remoteVideo.controls = false;
           await remoteVideo.play().catch(console.error);
         });
 
