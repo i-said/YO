@@ -1,6 +1,6 @@
 <template>
   <section>
-    <template v-if="!isStartTalking" >
+    <template v-if="isOwner && !isStartTalking" >
       <calling-wait-dialog />
     </template>
     <div class="columns is-mobile is-centered">
@@ -46,7 +46,8 @@ export default {
       waitingUsers: [],
       socket: "",
       isLoading: false,
-      isStartTalking: false
+      isStartTalking: false,
+      isOwner: false
     };
   },
   components:{
@@ -56,6 +57,7 @@ export default {
     console.log("mounted path: /calling");
     const room_id = this.$route.query.room_id;
     const isOwner = this.$route.query.isOwner;
+    this.isOwner = isOwner;
     if (!room_id) window.location.href = "/";
 
     const gotoThankYouPage = ()=> {
