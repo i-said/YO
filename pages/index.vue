@@ -15,6 +15,8 @@
 <script>
 import TalkingButton from '~/components/TalkingButton'
 import io from 'socket.io-client'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 
 const host = "yo-socketio.herokuapp.com"
 // const host = "localhost:3001"; //.env.local
@@ -31,6 +33,11 @@ export default {
 
   components: {
     TalkingButton
+  },
+  methods: {
+    ...mapActions([
+      'peer/add'
+    ])
   },
   mounted() {
     console.log("mounted path: /", this.socket)

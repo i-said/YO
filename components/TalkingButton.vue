@@ -12,16 +12,17 @@
 <script>
 import io from 'socket.io-client';
 const host = "yo-socketio.herokuapp.com"
-// const host = "localhost:3001"; //.env.local
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   data() {
-    return {
-    }
+    return {}
   },
-  props: {
-  },
+  props: {},
   methods: {
+    ...mapMutations([
+      'peer/add'
+    ]),
     createAloRoom() {
       // TODO なにかルームが作られる
       alert("Aloしてくれるユーザーを待ちます");
@@ -31,10 +32,11 @@ export default {
       }
 
       let room_id = "SOMEHOW"; // TODO: skywayから払い出されたやーつを使う
+      let peerObj = {'peer': 'peerobject'}
+      this.$store.commit('peer/add', peerObj)
       this.$parent.socket.emit('waiting-talk', room_id)
-      window.location.href = "./calling?room_id=" + room_id;
+      this.$router.push({ path: '/calling', query: {'room_id': room_id}})
     }
-
   }
 }
 </script>
