@@ -86,12 +86,9 @@ export default {
       });
 
       const callTrigger = (remoteId) => {
-
         if (!peer.open) {
           return;
         }
-
-        console.log(peer);
         const mediaConnection = peer.call(remoteId, localStream);
 
         mediaConnection.on("stream", async stream => {

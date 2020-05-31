@@ -3,15 +3,17 @@
     <div class="columns is-mobile is-centered">
       <talking-button>moshi!<br>moshi!</talking-button>
     </div>
-    <!--
-    <span>Todo: waiting中のloading  {{ isLoading }}</span>
-    -->
+    <template v-if="waitingUsers.length">
+      <calling-proposal-dialog />
+    </template>
   </section>
 </template>
 
 <script>
 import Peer from "skyway-js";
 import TalkingButton from '~/components/TalkingButton'
+import CallingProposalDialog from '~/components/CallingProposalDialog'
+
 import io from 'socket.io-client'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
@@ -26,18 +28,20 @@ export default {
       waitingUsers: [],
       socket: "",
       isLoading: false,
+      isCallingAccepted: false,
       myUserID: "",
       peer: ""
     };
   },
 
   components: {
-    TalkingButton
+    TalkingButton,
+    CallingProposalDialog
   },
   methods: {
     ...mapActions([
       'peer/add'
-    ])
+    ])    
   },
   mounted() {
     console.log("mounted path: /", this.socket);
@@ -54,10 +58,9 @@ export default {
     // 通話したそうな人が来たらalertが飛ぶ
     this.socket.on("request-calling-user", room_id => {
       console.log("通話したそうな人がきたよ");
-      let isReady = confirm("通話したそうな人がきたよ。通話を開始しますか？");
-      if (isReady)
-        this.socket.close();
-        this.$router.push({ path: '/calling', query: {'room_id': room_id , 'isOwner': false}})
+      this.waitingUsers.push(room_id);
+      console.log("通話したそうな人→", this.waitingUsers);
+
     });
   }
 };
