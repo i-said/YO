@@ -33,12 +33,12 @@
 
 <script>
 import Peer from "skyway-js";
+import io from "socket.io-client";
 import CallingWaitDialog from '~/components/CallingWaitDialog'
 
-const host = "yo-socketio.herokuapp.com"
 import { mapState, mapMutations } from 'vuex'
 
-// const host = "localhost:3001"; //.env.local
+const host = process.env.HOST_SOCKET_IO;
 
 export default {
   layout: 'calling',
@@ -165,7 +165,7 @@ export default {
         closeTrigger.addEventListener('click', () => {
           console.log("[peer.call]closeTrigger.click")
           mediaConnection.close(true)
-          
+
         });
       });
 

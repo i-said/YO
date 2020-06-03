@@ -4,7 +4,7 @@
 
 <script>
 import io from 'socket.io-client';
-const host = "yo-socketio.herokuapp.com"
+const host = process.env.HOST_SOCKET_IO; //.env.local
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {

@@ -21,9 +21,7 @@ import CallingProposalDialog from '~/components/CallingProposalDialog'
 import io from 'socket.io-client'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-
-const host = "yo-socketio.herokuapp.com";
-// const host = "localhost:3001"; //.env.local
+const host = process.env.HOST_SOCKET_IO;
 
 export default {
   name: "index",
