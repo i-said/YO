@@ -9,8 +9,8 @@ span,small,strong,
 div,ul,li,
 figure,img,
 header,footer,nav,section{
-    margin:0;
-    padding:0;
+  margin:0;
+  padding:0;
 	border:none;
 	outline:none;
 	font-size:1rem;
@@ -49,12 +49,13 @@ body::before {
   background-color: #FFA0C9;
   background-size: cover;
   display: block;
-  position: fixed;
+  position: absolute;
+  min-width: 100vw;
   top: 0;
-  bottom: 0;
   left: 0;
   right: 0;
-  min-width: 100vw;
+  bottom: 0;
+  margin: auto;
   min-height: 100vh;
   z-index: -1;
   transform: translateZ(0);
@@ -62,6 +63,7 @@ body::before {
 
 .bg_image_hiya {
   background-image: url("../img/bg01.png");
+  background-position: center center;
 }
 
 .bg_image_hiyaing {
@@ -85,7 +87,7 @@ body::before {
 }
 
 .hiya-top{
-  margin-top:50%;
+  margin-top:30%;
 }
 
 .thank{
