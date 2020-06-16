@@ -55,6 +55,7 @@ export default {
     'nuxt-buefy',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
@@ -64,6 +65,11 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+  },
+  proxy: {
+    '/video-token': {
+      target: "https://lion-buffalo-8457.twil.io"
+    }
   },
   /*
   ** Build configuration

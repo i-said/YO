@@ -58,6 +58,9 @@ export default {
     reverseMessages: function() {
       return this.messages.slice().reverse()
     },
+    getVideoToken: function() {
+      return this.$store.state.videoToken;
+    },
   },
   mounted() {
     // VueインスタンスがDOMにマウントされたらSocketインスタンスを生成する

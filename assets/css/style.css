@@ -84,9 +84,18 @@ body::before {
   margin-bottom: 20px;
 }
 
-.hiya-top{
-  margin-top:50%;
+@media screen and (orientation: landscape) {
+  .hiya-top{
+    margin-top:0%;
+  }
 }
+@media screen and (orientation: portrait) {
+  .hiya-top{
+    margin-top:50%;
+  }
+}
+
+
 
 .thank{
   margin-top:50%;
