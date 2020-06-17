@@ -23,14 +23,14 @@ export default {
       if (!this.$parent.socket) {
         this.$parent.socket = io(host);
       }
-      console.log("myUserID:" + this.$parent.videoToken.room)
+      console.log("room:" + this.$parent.userInfo.room)
 
       // this.$store.commit('peer/add', this.$parent.peer)
-      this.$parent.socket.emit('waiting-talk', this.$parent.videoToken.room)
+      this.$parent.socket.emit('waiting-talk', this.$parent.userInfo.room)
       // close main socket
       this.$parent.socket.close();
       console.log("this.$router.push")
-      this.$router.push({ path: '/calling', query: {'room_id': this.$parent.videoToken.room , 'isOwner': true}})
+      this.$router.push({ path: '/calling', query: {'room_id': this.$parent.userInfo.room , 'isOwner': true}})
     }
   }
 }

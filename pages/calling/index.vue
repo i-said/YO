@@ -11,10 +11,11 @@
         <p class="hito03">
           <img src="~/assets/img/hito03.png" width="300px">
         </p>
-        <a href="" id="js-close-trigger">
-          <img src="~/assets/img/btn_hangup.png" width="300px">
-        </a>
+        <p>
+          <img id="js-close-trigger" src="~/assets/img/btn_hangup.png" width="300px">
+        </p>
         <div class="controls">
+          <b-switch v-model="mute" @input="toggleMute">mute</b-switch>
           <b-switch v-model="mute" @input="toggleMute">mute</b-switch>
         </div>
       </div>
@@ -22,10 +23,10 @@
     <div class="container">
       <div class="remote-stream">
         <div id="remote-container"></div>
-        <!-- <video id="js-remote-stream"></video> -->
       </div>
       <div class="local-stream">
-        <video id="js-local-stream"></video>
+          <div id="local-container"></div>
+        <!-- <video id="js-local-stream"></video> -->
       </div>
     </div>
 
@@ -51,136 +52,170 @@ export default {
       socket: "",
       isLoading: false,
       isStartTalking: false,
-      isOwner: false
+      isOwner: false,
+      videoToken: "",
+      twilioVideo: "",
+      videoRoom: "",
     };
   },
   methods: {
     toggleMute:function() {
       console.log("mute:" + this.mute)
-      this.localVideo.srcObject.getAudioTracks()[0].enabled = !this.mute
+      // this.localVideo.srcObject.getAudioTracks()[0].enabled = !this.mute
+      this.videoRoom.localParticipant.audioTracks.forEach(publication => {
+        (this.mute) ? publication.track.disable() : publication.track.enable()
+      });
     },
     leave: function() {
       console.log("leave")
+    },
+    getVideoToken: async function(store, query, $axios) {
+      console.log("asyncData")
+
+      const room = store.state.userInfo.userInfo.room;
+      const room_id = query.room_id;
+      const identity = store.state.userInfo.userInfo.identity;
+      console.log(`room:${room},room_id:${room_id}, identity:${identity}`)
+
+      const twilioTokenUrl = "http://localhost:3000/video-token";
+      const videoToken = await $axios.$get(twilioTokenUrl,{
+          params: {
+          room: room_id,
+          identity: identity,
+        }
+      });
+      console.log("asyncData:videoToken:" + videoToken)
+      return videoToken;
     }
   },
   components:{
     CallingWaitDialog
   },
   computed: {
-    videoToken () {
-      return this.$store.state.videoToken.token;
+    userInfo () {
+      return this.$store.state.userInfo.userInfo;
     },
   },
   mounted() {
     console.log("mounted path: /calling");
-    console.log("videoToken:" + JSON.stringify(this.videoToken, null, "\t"))
-    const accessToken = this.videoToken.token;
+    const self = this;
     const room_id = this.$route.query.room_id;
     const isOwner = this.$route.query.isOwner;
-    this.isOwner = isOwner;
+    (async ()=> { 
+      self.videoToken = await self.getVideoToken(self.$store , self.$route.query , self.$axios);
 
-    const self = this;
-    const localVideo = self.localVideo = document.getElementById('js-local-stream');
-    const remoteVideoContainer = self.remoteVideo = document.getElementById('remote-container');
-    const closeTrigger = document.getElementById('js-close-trigger');
-    let videoRoom = null;
+      console.log("mounted:videoToken:" + JSON.stringify(self.videoToken, null, "\t"));
+      console.log("mounted:userInfo:" + JSON.stringify(self.userInfo, null, "\t"));
 
-    if (!room_id) window.location.href = "/";
+      if(!self.videoToken) gotoThankYouPage();
+      
+      const accessToken = self.videoToken.token;
+      console.log("accessToken:"+accessToken)
 
-    const gotoThankYouPage = ()=> {
-      console.log("gotoThankYouPage")
-      window.location.href = "/hangup"
-      return
-    }
+      self.isOwner = isOwner;
 
-    function participantConnected (participant) {
-      console.log(`Participant ${participant.identity} connected'`);
-    }
+      self.twilioVideo = twiVideo;
+      // const localVideo = self.localVideo = document.getElementById('js-local-stream');
+      const localVideo = self.localVideo = document.getElementById('local-container');
+      const remoteVideoContainer = self.remoteVideo = document.getElementById('remote-container');
+      const closeTrigger = document.getElementById('js-close-trigger');
+      
+
+      if (!room_id) gotoThankYouPage();
+
+      const gotoThankYouPage = () => {
+        location.href = "/hangup"
+        // $router.push("/hangup")
+      }
+
+      const participantConnected = (participant) => {
+          console.log(`Participant ${participant.identity} connected'`);
+          self.isStartTalking = true;
+
+          const div = document.createElement('div');
+          div.id = participant.sid;
+          // div.innerText = participant.identity;
+
+          participant.on('trackSubscribed', track => trackSubscribed(div, track));
+          participant.on('trackUnsubscribed', trackUnsubscribed);
+        
+          participant.tracks.forEach(publication => {
+            if (publication.isSubscribed) {
+              trackSubscribed(div, publication.track);
+            }
+          });
+        
+          remoteVideoContainer.appendChild(div);
+      }
+
+      const participantDisconnected = (participant) => {
+          console.log(`Participant ${participant.identity} disconnected.`);
+          document.getElementById(participant.sid).remove();
+          gotoThankYouPage();
+      }
+
+      const trackSubscribed = (div, track) => {
+          div.appendChild(track.attach());
+      }
+
+      const trackUnsubscribed = (track) => {
+          track.detach().forEach(element => element.remove());
+      }
 
 
-    // すでに接続している参加者に関する処理を追加    
-    function participantConnected(participant) {
-        console.log(`Participant ${participant.identity} connected'`);
+      console.log("room_id:"+ room_id + " isOwner:" + isOwner)
+      
+      let localStream = null;
 
-        const videoDom = document.createElement('div');
-        videoDom.id = participant.sid;
-        videoDom.className = 'videoDom';
-        participant.on('trackAdded', track => trackAdded(videoDom, track));
-        participant.tracks.forEach(track => trackAdded(videoDom, track));
-        participant.on('trackRemoved', trackRemoved);
-
-        remoteVideoContainer.append(videoDom);
-
-    }
-
-    // トラックを追加します
-    function trackAdded(videoDom, track) {
-        videoDom.appendChild(track.attach());
-    }
-
-    // トラックを削除します
-    function trackRemoved(track) {
-        track.detach().forEach(element => element.remove());
-    }
-
-    function participantDisconnected (participant){
-        console.log(`Participant ${participant.identity} disconnected.`);
-
-        participant.tracks.forEach(trackRemoved);
-        document.getElementById(participant.sid).remove();
-        gotoThankYouPage();
-    }
-
-
-    console.log("room_id:"+ room_id + " isOwner:" + isOwner)
-
-    if(accessToken === undefined) {
-      gotoThankYouPage()
-      return
-    }
-
-    
-    let localStream = null;
-
-    navigator.mediaDevices.getUserMedia({video: true, audio: true})
-        .then(stream => {
-            self.localVideo.srcObject = stream;
+      navigator.mediaDevices.getUserMedia({video: true, audio: true})
+          .then(stream => {
+            
+            // self.localVideo.muted = true;
+            // self.localVideo.control = true;
+            // self.localVideo.srcObject = stream;
             localStream = stream;
             connect();
+          }).catch(error => {
+              console.error(`mediaDevice.getUserMedia() error: ${error}`);
+              return;
+          });
+      
+
+      // ルームに接続
+      const connect = () => {
+        twiVideo.connect(accessToken, {
+            name: room_id,
+        })
+        .then(room => {
+          console.log(`Connected to Room ${room.name}`);
+          self.videoRoom = room;
+
+
+          room.Loca
+
+          room.participants.forEach(participantConnected);
+
+          room.on('participantConnected', participantConnected);
+          room.on('participantDisconnected', participantDisconnected);
+          room.once('disconnected', (error) => {
+            room.participants.forEach(participantDisconnected);
+            console.log(error);
+            gotoThankYouPage();
+          });
+
+
         }).catch(error => {
-            console.error(`mediaDevice.getUserMedia() error: ${error}`);
+            console.error(`Twilio.Video.connect error: ${error}`);
             return;
         });
-    
+      }
 
-    // ルームに接続
-    function connect() {
-      twiVideo.connect(accessToken, {
-          name: room_id,
+      closeTrigger.addEventListener('click', () => {
+        console.log("click disconnect")
+        self.videoRoom.disconnect();
+        self.videoRoom = null;
       })
-      .then(room => {
-        console.log(`Connected to Room ${room.name}`);
-        videoRoom = room;
-
-        room.participants.forEach(participantConnected);
-
-        room.on('participantConnected', participantConnected);
-        room.on('participantDisconnected', participantDisconnected);
-        room.once('disconnected', (error) => {
-          room.participants.forEach(participantDisconnected);
-          gotoThankYouPage();
-        });
-
-        closeTrigger.addEventListener('click', () => {
-          console.log("click disconnect")
-          videoRoom.disconnect();
-        })
-      }).catch(error => {
-          console.error(`Twilio.Video.connect error: ${error}`);
-          return;
-      });
-    }
-
+    })();
 
 
 
@@ -279,8 +314,14 @@ export default {
   },
   beforeDestroy() {
     console.log("beforeDestroy")
+    if(this.videoRoom !== null) {
+      this.videoRoom.disconnect();
+    }
     if(this.localVideo.srcObject !== null) {
       this.localVideo.srcObject.getTracks().forEach(track => track.stop());
+      // this.localVideo.pause();
+      this.localVideo.srcObject = null;
+      
     }
   }
 };

@@ -21,6 +21,7 @@
 
 <script>
 // import Peer from "skyway-js";
+import { v4 as uuidv4 } from 'uuid';
 import twilio from 'twilio-video'
 
 import TalkingButton from '~/components/TalkingButton'
@@ -32,6 +33,13 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 const host = "yo-socketio.herokuapp.com";
 // const host = "localhost:3001"; //.env.local
 
+let roomid = uuidv4();
+let userid = uuidv4();
+const userInfo = {
+  room: roomid,
+  identity: userid
+}
+
 export default {
   name: "index",
   data() {
@@ -42,34 +50,31 @@ export default {
       isCallingAccepted: false,
       myUserID: "",
       twilio: "",
-      videoToken: ""
+      userInfo: ""
     };
   },
   components: {
     TalkingButton,
     CallingProposalDialog
   },
-  async asyncData(context) {
-    const twilioTokenUrl = "http://localhost:3000/video-token";
-    const videoToken = await context.app.$axios.$get(twilioTokenUrl)
-    console.log("videoToken:" + videoToken)
-    // context.app.$store.commit('videoToken/add', videoToken)
-    return {videoToken};
-  },
   methods: {
     ...mapActions([
       'videoToken/add'
     ]),
-    addVideoToken(token) {
-      console.log("addVideoToken:" + JSON.stringify(token, null, '\t'));
-      this.$store.commit('videoToken/add', token);
+    addUserInfo(info) {
+      console.log("addUserInfo:" + JSON.stringify(info, null, '\t'));
+      this.$store.commit('userInfo/add', info);
     },
 
   },
   mounted() {
     console.log("mounted path: /", this);
     this.socket = io(host);
-    this.addVideoToken(this.videoToken);
+
+    this.userInfo = userInfo
+
+    this.addUserInfo(userInfo);
+
 
 
     // this.peer = (window.peer = new Peer({

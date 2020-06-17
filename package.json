@@ -21,7 +21,8 @@
     "nuxt-buefy": "^0.3.2",
     "skyway-js": "^3.0.0",
     "socket.io": "^2.3.0",
-    "twilio-video": "^2.5.0"
+    "twilio-video": "^2.5.0",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "push-dir": "^0.4.1"
