@@ -16,7 +16,6 @@
         </p>
         <div class="controls">
           <b-switch v-model="mute" @input="toggleMute">mute</b-switch>
-          <b-switch v-model="mute" @input="toggleMute">mute</b-switch>
         </div>
       </div>
     </div>
@@ -187,8 +186,12 @@ export default {
           console.log(`Connected to Room ${room.name}`);
           self.videoRoom = room;
 
-          twiVideo.createLocalVideoTrack().then(localVideoTrack => {
-            localContainer.appendChild(localVideoTrack.attach());
+          // twiVideo.createLocalVideoTrack().then(localVideoTrack => {
+          //   localContainer.appendChild(localVideoTrack.attach());
+          // });
+
+          twiVideo.createLocalAudioTrack().then(function(localTrack) {
+            room.localParticipant.publishTrack(localTrack);
           });
 
           room.participants.forEach(participantConnected);
