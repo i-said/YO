@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container is-hidden">
       <div class="remote-stream">
         <div id="remote-container"></div>
       </div>
@@ -70,14 +70,15 @@ export default {
       console.log("leave")
     },
     getVideoToken: async function(store, query, $axios) {
-      console.log("asyncData")
+      console.log("getVideoToken")
 
       const room = store.state.userInfo.userInfo.room;
       const room_id = query.room_id;
       const identity = store.state.userInfo.userInfo.identity;
       console.log(`room:${room},room_id:${room_id}, identity:${identity}`)
 
-      const twilioTokenUrl = "http://localhost:3000/video-token";
+      const twilioTokenUrl = `${location.protocol}//${location.host}/video-token`;
+      console.log(`twilioTokenUrl:${twilioTokenUrl}`)
       const videoToken = await $axios.$get(twilioTokenUrl,{
           params: {
           room: room_id,
@@ -116,7 +117,7 @@ export default {
 
       self.twilioVideo = twiVideo;
       // const localVideo = self.localVideo = document.getElementById('js-local-stream');
-      const localVideo = self.localVideo = document.getElementById('local-container');
+      const localContainer = self.localVideo = document.getElementById('local-container');
       const remoteVideoContainer = self.remoteVideo = document.getElementById('remote-container');
       const closeTrigger = document.getElementById('js-close-trigger');
       
@@ -167,14 +168,10 @@ export default {
       
       let localStream = null;
 
-      navigator.mediaDevices.getUserMedia({video: true, audio: true})
+      navigator.mediaDevices.getUserMedia({video: false, audio: true})
           .then(stream => {
-            
-            // self.localVideo.muted = true;
-            // self.localVideo.control = true;
-            // self.localVideo.srcObject = stream;
             localStream = stream;
-            connect();
+            (async ()=>{ await connect();})();
           }).catch(error => {
               console.error(`mediaDevice.getUserMedia() error: ${error}`);
               return;
@@ -190,8 +187,9 @@ export default {
           console.log(`Connected to Room ${room.name}`);
           self.videoRoom = room;
 
-
-          room.Loca
+          twiVideo.createLocalVideoTrack().then(localVideoTrack => {
+            localContainer.appendChild(localVideoTrack.attach());
+          });
 
           room.participants.forEach(participantConnected);
 
@@ -217,107 +215,13 @@ export default {
       })
     })();
 
-
-
-
-    // (async function main() {
-    //   const localVideo = self.localVideo = document.getElementById('js-local-stream');
-    //   const remoteVideo = self.remoteVideo = document.getElementById('js-remote-stream');
-    //   const closeTrigger = document.getElementById('js-close-trigger');
-
-    //   const localStream = await navigator.mediaDevices
-    //     .getUserMedia({
-    //       audio: true,
-    //       video: false,
-    //     })
-    //     .catch(console.error);
-
-    //   // Render local stream
-    //   localVideo.muted = true;
-    //   localVideo.srcObject = localStream;
-    //   localVideo.playsInline = true;
-    //   localVideo.visible = false;
-    //   localVideo.controls = false;
-    //   await localVideo.play().catch(console.error);
-
-    //   const peer = window.peer
-
-    //   // Register caller handler
-    //   const callTrigger = (remoteId) => {
-    //     // Note that you need to ensure the peer has connected to signaling server
-    //     // before using methods of peer instance.
-    //     if (!peer.open) {
-    //       gotoThankYouPage()
-    //       return;
-    //     }
-    //     const mediaConnection = peer.call(remoteId, localStream);
-
-    //     mediaConnection.on('stream', async stream => {
-    //       // Render remote stream for caller
-    //       remoteVideo.srcObject = stream;
-    //       remoteVideo.playsInline = true;
-    //       remoteVideo.volume = 1.0;
-    //       remoteVideo.controls = false;
-    //       await remoteVideo.play().catch(console.error);
-    //     });
-
-    //     mediaConnection.once('close', () => {
-    //       console.log("[callTrigger]mediaConnection.close")
-    //       remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-    //       remoteVideo.srcObject = null;
-    //       gotoThankYouPage()
-    //     });
-
-    //     closeTrigger.addEventListener('click', () => {
-    //       console.log("[callTrigger]closeTrigger.click")
-    //       mediaConnection.close(true)
-    //     });
-    //   };
-
-    //   peer.on('call', mediaConnection => {
-    //     // searching modal fade
-    //     self.isStartTalking = true;
-    //     mediaConnection.answer(localStream);
-    //     mediaConnection.on('stream', async stream => {
-    //       // Render remote stream for callee
-    //       remoteVideo.srcObject = stream;
-    //       remoteVideo.playsInline = true;
-    //       remoteVideo.volume = 1.0;
-    //       remoteVideo.controls = false;
-    //       await remoteVideo.play().catch(console.error);
-    //     });
-
-    //     mediaConnection.once('close', () => {
-    //       console.log("[peer.call]mediaConnection.close")
-    //       remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-    //       remoteVideo.srcObject = null;
-    //       gotoThankYouPage()
-    //     });
-
-    //     closeTrigger.addEventListener('click', () => {
-    //       console.log("[peer.call]closeTrigger.click")
-    //       mediaConnection.close(true)
-          
-    //     });
-    //   });
-
-
-
-    //   //Errorになったらもとのページに戻す？
-    //   peer.on('error', console.error);
-
-    //   //自分のIDじゃないのでCallする
-    //   if(!isOwner) callTrigger(room_id)
-
-    // })();
-
   },
   beforeDestroy() {
     console.log("beforeDestroy")
-    if(this.videoRoom !== null) {
+    if(this.videoRoom) {
       this.videoRoom.disconnect();
-    }
-    if(this.localVideo.srcObject !== null) {
+  }
+    if(this.localVideo.srcObject) {
       this.localVideo.srcObject.getTracks().forEach(track => track.stop());
       // this.localVideo.pause();
       this.localVideo.srcObject = null;
