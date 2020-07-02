@@ -181,18 +181,19 @@ export default {
       const connect = () => {
         twiVideo.connect(accessToken, {
             name: room_id,
+            video: false,
         })
         .then(room => {
           console.log(`Connected to Room ${room.name}`);
           self.videoRoom = room;
 
-          // twiVideo.createLocalVideoTrack().then(localVideoTrack => {
-          //   localContainer.appendChild(localVideoTrack.attach());
-          // });
-
-          twiVideo.createLocalAudioTrack().then(function(localTrack) {
-            room.localParticipant.publishTrack(localTrack);
+          twiVideo.createLocalVideoTrack().then(localVideoTrack => {
+            localContainer.appendChild(localVideoTrack.attach());
           });
+
+          // twiVideo.createLocalAudioTrack().then(function(localTrack) {
+          //   room.localParticipant.publishTrack(localTrack);
+          // });
 
           room.participants.forEach(participantConnected);
 
