@@ -55,7 +55,7 @@ export default {
   },
   components: {
     TalkingButton,
-    CallingProposalDialog
+    CallingProposalDialog,
   },
   methods: {
     ...mapActions([
@@ -75,8 +75,6 @@ export default {
 
     this.addUserInfo(userInfo);
 
-
-
     // this.peer = (window.peer = new Peer({
     //   key: "d8e43ecb-578b-414e-a161-2f00615b447e",
     //   debug: 3
@@ -91,6 +89,10 @@ export default {
       this.waitingUsers.push(room_id);
       console.log("通話したそうな人→", this.waitingUsers);
     });
+
+    this.socket.on("count"), count => {
+      console.log("接続者数:",count);
+    }
   }
 };
 </script>

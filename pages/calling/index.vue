@@ -1,6 +1,6 @@
 <template>
   <section>
-    <template v-if="isOwner && !isStartTalking" >
+    <template v-if="!isStartTalking" >
       <calling-wait-dialog />
     </template>
     <div class="columns is-mobile is-centered">
@@ -36,6 +36,7 @@
 console.log("calling")
 import twiVideo from 'twilio-video'
 import CallingWaitDialog from '~/components/CallingWaitDialog'
+import NavBar from '~/components/NavBar'
 const host = "yo-socketio.herokuapp.com"
 import { mapState, mapMutations } from 'vuex'
 
@@ -89,7 +90,8 @@ export default {
     }
   },
   components:{
-    CallingWaitDialog
+    CallingWaitDialog,
+    NavBar
   },
   computed: {
     userInfo () {

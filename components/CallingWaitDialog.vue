@@ -9,8 +9,9 @@
           <p class="hito02">
             <img src="~/assets/img/hito02.png" width="300px">
           </p>
-        </div>      
+        </div>
       </div>
+      <b-button type="is-primary" onclick="location.href='/hangup'">Cancel</b-button>
     </div>
 </template>
 

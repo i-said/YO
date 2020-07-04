@@ -1,15 +1,24 @@
 <template>
   <div>
     <section class="main-content columns bg_image_hiya">
-      <div class="container column is-10">
-        <nuxt />
+      <div class="container">
+        <div class="column">
+          <NavBar/>
+        </div>
+        <div class="container column is-10">
+          <nuxt />
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <script>
+import NavBar from '~/components/NavBar.vue'
 export default {
+  components: {
+    NavBar
+  },
   data () {
     return {
       items: [
